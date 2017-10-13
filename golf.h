@@ -67,3 +67,7 @@ void pop_deck_stack();
 void print_deck_stack();
 void initialize_SDL();
 void render_column(struct column_stack *_stack, int column_number);
+void render_big_pile();
+void add_to_big_pile(struct card *_card);
+void check_mouse_click(int mouse_x, int mouse_y);
+void render_back_card();

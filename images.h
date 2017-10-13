@@ -5,6 +5,7 @@
 void load_images();
 extern SDL_Renderer* renderer;
 
+SDL_Surface* back_surface;
 SDL_Surface* c_1_surface;
 SDL_Surface* c_2_surface;
 SDL_Surface* c_3_surface;
@@ -58,6 +59,7 @@ SDL_Surface* d_11_surface;
 SDL_Surface* d_12_surface;
 SDL_Surface* d_13_surface;
 
+SDL_Texture* back;
 SDL_Texture* c_1;
 SDL_Texture* c_2;
 SDL_Texture* c_3;

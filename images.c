@@ -3,6 +3,7 @@
 void load_images() {
     printf("Image loading...\n");
     IMG_Init(IMG_INIT_PNG);
+    back_surface = IMG_Load("misc/a_back.png");
     c_1_surface  = IMG_Load("misc/c_1.png");
     c_2_surface  = IMG_Load("misc/c_2.png");
     c_3_surface  = IMG_Load("misc/c_3.png");
@@ -56,6 +57,7 @@ void load_images() {
     s_12_surface = IMG_Load("misc/s_12.png");
     s_13_surface = IMG_Load("misc/s_13.png");
 
+    back = SDL_CreateTextureFromSurface(renderer, back_surface);
     c_1  = SDL_CreateTextureFromSurface(renderer, c_1_surface);
     c_2  = SDL_CreateTextureFromSurface(renderer, c_2_surface);
     c_3  = SDL_CreateTextureFromSurface(renderer, c_3_surface);

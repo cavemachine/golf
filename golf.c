@@ -7,7 +7,7 @@ void initialize_SDL() {
     SDL_Init(SDL_INIT_VIDEO);
     srand(time(NULL));
     
-    window = SDL_CreateWindow("test",
+    window = SDL_CreateWindow("cave golf",
     			      SDL_WINDOWPOS_CENTERED,
     			      SDL_WINDOWPOS_CENTERED,
     			      640,
@@ -228,34 +228,28 @@ void render_column(struct column_stack *_stack, int column_number) {
 
     for (int i = 0; i <= _stack->top; i++) {
 	card_rect.y += 25;
-        SDL_RenderCopy(renderer, _stack->card[i]->card_image, NULL, &card_rect);
+	SDL_RenderCopy(renderer, _stack->card[i]->card_image, NULL, &card_rect);
 	if (i == _stack->top) {
 	    _stack->top_x = card_rect.x;
 	    _stack->top_y = card_rect.y;
 	}
     }
 }
-
 void render_big_pile() {
     card_rect.y = big_pile.top_y;
 
     for (int i = 0; i < big_pile_count; i++) {
-	big_pile.top_x += 25;
+	big_pile.top_x += 15;
 	card_rect.x = big_pile.top_x;
 	SDL_RenderCopy(renderer, big_pile.card[i]->card_image, NULL, &card_rect);
-    }  
+    }
+    big_pile.top_x = 100;
 }
 
 void add_to_big_pile(struct card *_card) {
     big_pile.top++;
     big_pile.card[big_pile.top] = _card;
     big_pile_count++;
-    card_rect.x = big_pile.top_x + 15;
-    big_pile.top_x = card_rect.x;
-    card_rect.y = big_pile.top_y;   
-    SDL_RenderCopy(renderer, big_pile.card[big_pile.top]->card_image, NULL, &card_rect);
-    
-    //render_big_pile();
 }
 
 void check_mouse_click(int mouse_x, int mouse_y) {
@@ -264,16 +258,35 @@ void check_mouse_click(int mouse_x, int mouse_y) {
 	    (mouse_x < column_stack_list[i]->top_x + CARD_WIDTH) &&
 	    (mouse_y > column_stack_list[i]->top_y) &&
 	    (mouse_y < column_stack_list[i]->top_y + CARD_HEIGHT)) {
-	    printf("stack %i clicked\n", i + 1);
-	    printf("card value: %i\n", column_stack_list[i]->card[column_stack_list[i]->top]->value);
-	    printf("card value: %c\n", column_stack_list[i]->card[column_stack_list[i]->top]->suit);
-	    add_to_big_pile(column_stack_list[i]->card[column_stack_list[i]->top]);
-	    column_stack_list[i]->top--;
-	    render_column(column_stack_list[i], i+1);	    
-			    
+	    if (column_stack_list[i]->top >= 0) {
+		printf("stack %i clicked\n", i + 1);
+		printf("card value: %i\n", column_stack_list[i]->card[column_stack_list[i]->top]->value);
+		printf("card value: %c\n", column_stack_list[i]->card[column_stack_list[i]->top]->suit);
+		int stack_top_value = column_stack_list[i]->card[column_stack_list[i]->top]->value;
+		int big_pile_top_value = big_pile.card[big_pile.top]->value;
+		
+		if ((stack_top_value == big_pile_top_value + 1) ||
+		    (stack_top_value == big_pile_top_value - 1) &&
+		    (big_pile_top_value != 13)) {
+		    add_to_big_pile(column_stack_list[i]->card[column_stack_list[i]->top]);
+		    column_stack_list[i]->top--;
+		    render_column(column_stack_list[i], i+1);
+		}
+	    }
 	}
     }
-
+   
+    if ((mouse_x > 20) &&  // if deck stack is clicked:
+	(mouse_x < 20 + CARD_WIDTH) &&
+	(mouse_y > 300) &&
+	(mouse_y < 300 + CARD_HEIGHT)) {
+	if (deck_stack.top >= 0) {
+	    add_to_big_pile(deck_stack.card[deck_stack.top]);
+	    deck_stack.top--;
+	    number_of_deck_cards--;
+	}
+    }
+    
     /* if (column_stack4.selected == false) { */
     /*     SDL_SetTextureColorMod(column_stack4.card[column_stack4.top]->card_image,70,70,70); */
     /*     render_column(&column_stack4, 4); */
@@ -286,8 +299,26 @@ void check_mouse_click(int mouse_x, int mouse_y) {
     /*     column_stack4.selected = false;	     */
     /* } */
 }	   
-	
 
+void render_back_card() {
+    card_rect.y = 300;
+    card_rect.x = 20;
+    SDL_RenderCopy(renderer, back, NULL, &card_rect);    
+}
+
+void render_everything() {
+    SDL_RenderClear(renderer);
+    render_column(&column_stack1, 1);
+    render_column(&column_stack2, 2);
+    render_column(&column_stack3, 3);
+    render_column(&column_stack4, 4);
+    render_column(&column_stack5, 5);
+    render_column(&column_stack6, 6);
+    render_column(&column_stack7, 7);
+    render_back_card();
+    render_big_pile();
+    SDL_RenderPresent(renderer);
+}
 int main () {
     
     initialize_SDL();
@@ -323,14 +354,16 @@ int main () {
     column_stack_list[5] = &column_stack6;
     column_stack_list[6] = &column_stack7;
 
-
-
     create_big_pile();
     render_big_pile();
+
+    render_back_card();
     
     SDL_RenderPresent(renderer);
+
     
     //-------------------------------------------
+    
     SDL_bool done = SDL_FALSE;
     while(!done)
     	{
@@ -349,7 +382,7 @@ int main () {
 		    check_mouse_click(mouse_x,mouse_y);
     		}
     	    }
-    	    SDL_RenderPresent(renderer);
+	    render_everything();
     	    SDL_Delay(10);
 	 
 	
