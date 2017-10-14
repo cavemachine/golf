@@ -7,11 +7,11 @@ void initialize_SDL() {
     SDL_Init(SDL_INIT_VIDEO);
     srand(time(NULL));
     
-    window = SDL_CreateWindow("cave golf",
+    window = SDL_CreateWindow("Cave golf",
     			      SDL_WINDOWPOS_CENTERED,
     			      SDL_WINDOWPOS_CENTERED,
-    			      640,
-    			      480,
+    			      800,
+    			      420,
     			      SDL_WINDOW_SHOWN );
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 }
@@ -47,7 +47,6 @@ void create_big_pile() {
     big_pile.top_x = 100;
     big_pile.top_y = 300;
     big_pile_count++;
-    
 
     deck_stack.top--;
     number_of_deck_cards--;
@@ -93,6 +92,22 @@ void create_deck_stack() {
     for (int i = 0; i < 17; i++) {
 	deck_stack.card[i]->available = true;
     }
+}
+void create_all_column() {
+    create_column(&column_stack1);    
+    create_column(&column_stack2);
+    create_column(&column_stack3);     
+    create_column(&column_stack4); 
+    create_column(&column_stack5);
+    create_column(&column_stack6);
+    create_column(&column_stack7);
+    column_stack_list[0] = &column_stack1;
+    column_stack_list[1] = &column_stack2;    
+    column_stack_list[2] = &column_stack3;
+    column_stack_list[3] = &column_stack4;
+    column_stack_list[4] = &column_stack5;   
+    column_stack_list[5] = &column_stack6;
+    column_stack_list[6] = &column_stack7; 
 }
 void associate_deck_images() {
     deck[0][0].card_image = c_1;
@@ -153,11 +168,14 @@ void pop_column_stack(struct column_stack *_stack) {
     _stack->top--;   
 }
 void pop_deck_stack() {
-    deck_stack.card[deck_stack.top]->available = false;
     deck_stack.top--;
     number_of_deck_cards--;
 }
-
+void add_to_big_pile(struct card *_card) {
+    big_pile.top++;
+    big_pile.card[big_pile.top] = _card;
+    big_pile_count++;
+}
 
 void print_deck() {
     
@@ -203,27 +221,9 @@ void render_column(struct column_stack *_stack, int column_number) {
     if (column_number == 1) {
 	card_rect.x = 20;
     } else {
-	card_rect.x = (75 * column_number) - 55;
+	card_rect.x = (80 * column_number) - 55;
     }
-    
-    /* switch(column_number){ */
-    /* case 1: */
-    /* 	card_rect.x = 40; */
-    /* 	break; */
-    /* case 1: */
-    /* 	card_rect.x = 40; */
-    /* 	break; */
-    /* case 1: */
-    /* 	card_rect.x = 40; */
-    /* 	break; */
-    /* case 1: */
-    /* 	card_rect.x = 40; */
-    /* 	break; */
-    /* case 1: */
-    /* 	card_rect.x = 40; */
-    /* 	break;	 */
-    /* } */
-    
+   
     card_rect.y = 0;
 
     for (int i = 0; i <= _stack->top; i++) {
@@ -239,17 +239,30 @@ void render_big_pile() {
     card_rect.y = big_pile.top_y;
 
     for (int i = 0; i < big_pile_count; i++) {
-	big_pile.top_x += 15;
+	big_pile.top_x += 10;
 	card_rect.x = big_pile.top_x;
 	SDL_RenderCopy(renderer, big_pile.card[i]->card_image, NULL, &card_rect);
     }
     big_pile.top_x = 100;
 }
-
-void add_to_big_pile(struct card *_card) {
-    big_pile.top++;
-    big_pile.card[big_pile.top] = _card;
-    big_pile_count++;
+void render_back_card() {
+    card_rect.y = 300;
+    card_rect.x = 20;
+    SDL_RenderCopy(renderer, back, NULL, &card_rect);    
+}
+void render_everything() {
+    SDL_SetRenderDrawColor(renderer, 40, 90, 40, 255);
+    SDL_RenderClear(renderer);
+    render_column(&column_stack1, 1);
+    render_column(&column_stack2, 2);
+    render_column(&column_stack3, 3);
+    render_column(&column_stack4, 4);
+    render_column(&column_stack5, 5);
+    render_column(&column_stack6, 6);
+    render_column(&column_stack7, 7);
+    render_big_pile();
+    render_back_card();
+    SDL_RenderPresent(renderer);
 }
 
 void check_mouse_click(int mouse_x, int mouse_y) {
@@ -259,9 +272,6 @@ void check_mouse_click(int mouse_x, int mouse_y) {
 	    (mouse_y > column_stack_list[i]->top_y) &&
 	    (mouse_y < column_stack_list[i]->top_y + CARD_HEIGHT)) {
 	    if (column_stack_list[i]->top >= 0) {
-		printf("stack %i clicked\n", i + 1);
-		printf("card value: %i\n", column_stack_list[i]->card[column_stack_list[i]->top]->value);
-		printf("card value: %c\n", column_stack_list[i]->card[column_stack_list[i]->top]->suit);
 		int stack_top_value = column_stack_list[i]->card[column_stack_list[i]->top]->value;
 		int big_pile_top_value = big_pile.card[big_pile.top]->value;
 		
@@ -286,84 +296,26 @@ void check_mouse_click(int mouse_x, int mouse_y) {
 	    number_of_deck_cards--;
 	}
     }
-    
-    /* if (column_stack4.selected == false) { */
-    /*     SDL_SetTextureColorMod(column_stack4.card[column_stack4.top]->card_image,70,70,70); */
-    /*     render_column(&column_stack4, 4); */
-    /*     SDL_RenderPresent(renderer); */
-    /*     column_stack4.selected = true; */
-    /* } else { */
-    /*     SDL_SetTextureColorMod(column_stack4.card[column_stack4.top]->card_image,255,255,255); */
-    /*     render_column(&column_stack4, 4); */
-    /*     SDL_RenderPresent(renderer); */
-    /*     column_stack4.selected = false;	     */
-    /* } */
+   
 }	   
 
-void render_back_card() {
-    card_rect.y = 300;
-    card_rect.x = 20;
-    SDL_RenderCopy(renderer, back, NULL, &card_rect);    
-}
-
-void render_everything() {
-    SDL_RenderClear(renderer);
-    render_column(&column_stack1, 1);
-    render_column(&column_stack2, 2);
-    render_column(&column_stack3, 3);
-    render_column(&column_stack4, 4);
-    render_column(&column_stack5, 5);
-    render_column(&column_stack6, 6);
-    render_column(&column_stack7, 7);
-    render_back_card();
-    render_big_pile();
-    SDL_RenderPresent(renderer);
-}
 int main () {
     
-    initialize_SDL();
-    load_images();    
-    create_deck();
-    associate_deck_images();
-    create_column(&column_stack1);    
-    create_column(&column_stack2);
-    create_column(&column_stack3);     
-    create_column(&column_stack4); 
-    create_column(&column_stack5);
-    create_column(&column_stack6);
-    create_column(&column_stack7);
-
+    initialize_SDL();    
+    load_images();
     
-    create_deck_stack();
-    print_deck_stack();
     card_rect.w = CARD_WIDTH;
     card_rect.h = CARD_HEIGHT;
     
-    render_column(&column_stack1, 1);
-    render_column(&column_stack2, 2);
-    render_column(&column_stack3, 3);
-    render_column(&column_stack4, 4);
-    render_column(&column_stack5, 5);
-    render_column(&column_stack6, 6);
-    render_column(&column_stack7, 7);
-    column_stack_list[0] = &column_stack1;
-    column_stack_list[1] = &column_stack2;    
-    column_stack_list[2] = &column_stack3;
-    column_stack_list[3] = &column_stack4;
-    column_stack_list[4] = &column_stack5;   
-    column_stack_list[5] = &column_stack6;
-    column_stack_list[6] = &column_stack7;
-
+    create_deck();
+    create_deck_stack();
+    associate_deck_images();
     create_big_pile();
-    render_big_pile();
 
-    render_back_card();
-    
-    SDL_RenderPresent(renderer);
+    create_all_column();
 
-    
-    //-------------------------------------------
-    
+
+    //-------------------------------------------    
     SDL_bool done = SDL_FALSE;
     while(!done)
     	{
@@ -386,12 +338,11 @@ int main () {
     	    SDL_Delay(10);
 	 
 	
-    	}
-    
+    	}    
     SDL_Quit();
+    IMG_Quit();
     exit( 0 );
-
-    
+   
     return(0);
 }
 

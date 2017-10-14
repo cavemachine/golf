@@ -4,10 +4,10 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <time.h>
-#include <SDL2/SDL_image.h>
 
 #define CARD_WIDTH 70
 #define CARD_HEIGHT 95
+
 struct card {
     int value;
     char suit;
@@ -29,7 +29,6 @@ struct big_pile_stack {
 
 struct column_stack {
     struct card *card[5];
-    bool selected;
     int top;
     int top_x;
     int top_y;
@@ -71,3 +70,5 @@ void render_big_pile();
 void add_to_big_pile(struct card *_card);
 void check_mouse_click(int mouse_x, int mouse_y);
 void render_back_card();
+void create_all_column();
+void render_everything();

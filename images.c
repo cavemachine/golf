@@ -1,7 +1,6 @@
 #include "images.h"
 
 void load_images() {
-    printf("Image loading...\n");
     IMG_Init(IMG_INIT_PNG);
     back_surface = IMG_Load("misc/a_back.png");
     c_1_surface  = IMG_Load("misc/c_1.png");
@@ -109,6 +108,58 @@ void load_images() {
     d_10 = SDL_CreateTextureFromSurface(renderer, d_10_surface);
     d_11 = SDL_CreateTextureFromSurface(renderer, d_11_surface);
     d_12 = SDL_CreateTextureFromSurface(renderer, d_12_surface);
-    d_13 = SDL_CreateTextureFromSurface(renderer, d_13_surface);    
-    
+    d_13 = SDL_CreateTextureFromSurface(renderer, d_13_surface);
+
+    SDL_FreeSurface(c_1_surface);
+    SDL_FreeSurface(c_2_surface);    
+    SDL_FreeSurface(c_3_surface);
+    SDL_FreeSurface(c_4_surface);
+    SDL_FreeSurface(c_5_surface);
+    SDL_FreeSurface(c_6_surface);    
+    SDL_FreeSurface(c_7_surface);
+    SDL_FreeSurface(c_8_surface);
+    SDL_FreeSurface(c_9_surface);
+    SDL_FreeSurface(c_10_surface);    
+    SDL_FreeSurface(c_11_surface);
+    SDL_FreeSurface(c_12_surface);
+    SDL_FreeSurface(c_13_surface);
+    SDL_FreeSurface(d_1_surface);    
+    SDL_FreeSurface(d_2_surface);
+    SDL_FreeSurface(d_3_surface);
+    SDL_FreeSurface(d_4_surface);    
+    SDL_FreeSurface(d_5_surface);
+    SDL_FreeSurface(d_6_surface);
+    SDL_FreeSurface(d_7_surface);    
+    SDL_FreeSurface(d_8_surface);
+    SDL_FreeSurface(d_9_surface);
+    SDL_FreeSurface(d_10_surface);    
+    SDL_FreeSurface(d_11_surface);
+    SDL_FreeSurface(d_12_surface);
+    SDL_FreeSurface(d_13_surface);    
+    SDL_FreeSurface(s_1_surface);    
+    SDL_FreeSurface(s_2_surface);
+    SDL_FreeSurface(s_3_surface);   
+    SDL_FreeSurface(s_4_surface);    
+    SDL_FreeSurface(s_5_surface);
+    SDL_FreeSurface(s_6_surface);
+    SDL_FreeSurface(s_7_surface);    
+    SDL_FreeSurface(s_8_surface);
+    SDL_FreeSurface(s_9_surface);   
+    SDL_FreeSurface(s_10_surface);    
+    SDL_FreeSurface(s_11_surface);
+    SDL_FreeSurface(s_12_surface);
+    SDL_FreeSurface(s_13_surface);    
+    SDL_FreeSurface(h_1_surface);
+    SDL_FreeSurface(h_2_surface);   
+    SDL_FreeSurface(h_3_surface);    
+    SDL_FreeSurface(h_4_surface);
+    SDL_FreeSurface(h_5_surface);    
+    SDL_FreeSurface(h_6_surface);
+    SDL_FreeSurface(h_7_surface);   
+    SDL_FreeSurface(h_8_surface);    
+    SDL_FreeSurface(h_9_surface);
+    SDL_FreeSurface(h_10_surface);
+    SDL_FreeSurface(h_11_surface);
+    SDL_FreeSurface(h_12_surface);   
+    SDL_FreeSurface(h_13_surface);        
 }
